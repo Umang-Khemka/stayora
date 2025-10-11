@@ -8,7 +8,7 @@ const createListing = async (req, res) => {
     const { title, description, category, price, location, country } = req.body;
     const ownerId = req.user._id;
 
-    let imageUrl = "";
+    let imageData = null;
     if (req.file) {
       const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
         folder: "listings",

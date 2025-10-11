@@ -113,7 +113,7 @@ const updateListingImage = async (req, res) => {
       folder: "listings",
     });
 
-    listing.image = uploadResponse.secure_url;
+    listing.image.url = uploadResponse.secure_url;
     await listing.save();
 
     res.status(200).json({ message: "Listing image updated successfully", listing });

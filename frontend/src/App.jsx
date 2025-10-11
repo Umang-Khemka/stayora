@@ -6,6 +6,7 @@ import WishListPage from "./pages/WishListPage.jsx";
 import CreateListingPage from "./pages/CreateListingPage.jsx";
 import ViewPage from "./pages/ViewPage.jsx";
 import BookingPage from "./pages/BookingPage.jsx";
+import EditListingPage from "./pages/EditListingPage.jsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/create-listing' element={<CreateListingPage/>} />
           <Route path='/listing/:id' element={<ViewPage/>} />
           <Route path='/booking/:id' element={<BookingPage/>} />
+          <Route path='/edit-listing/:id' element={<EditListingPage/>} />
         </Routes>
       </Router>
   )

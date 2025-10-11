@@ -7,6 +7,7 @@ import { useAuthStore } from "../store/user.store.js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Footer from "../components/Footer.jsx";
+import emailjs from "@emailjs/browser";
 
 export default function BookingPage() {
   const { id } = useParams();
@@ -23,7 +24,6 @@ export default function BookingPage() {
     if (id) fetchListingById(id);
     checkAuth();
   }, [id, fetchListingById, checkAuth]);
-
   if (!user) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -34,6 +34,7 @@ export default function BookingPage() {
     );
   }
 
+  
   const handleBooking = async () => {
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
@@ -45,9 +46,35 @@ export default function BookingPage() {
     }
 
     const res = await createBooking(id, startDate, endDate);
+
     if (res.success) {
-      alert(res.message);
-      navigate("/bookings");
+      const templateParams = {
+        name: user.username,
+        email: user.email,
+        listing_title: singleListing.title,
+        start_date: startDate.toDateString(),
+        end_date: endDate.toDateString(),
+        total_price: totalPrice.toFixed(2),
+      };
+
+      emailjs
+        .send(
+          import.meta.env.VITE_EMAILJS_SERVICE_ID,
+          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          templateParams,
+          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        )
+        .then(
+          (response) => {
+            console.log("✅ Email sent:", response.status, response.text);
+          },
+          (error) => {
+            console.error("❌ Email send failed:", error);
+          }
+        );
+
+      alert("Booking confirmed! A confirmation email has been sent.");
+      navigate("/");
     } else {
       alert(res.message);
     }
